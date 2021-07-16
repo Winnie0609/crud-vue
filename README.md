@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CRUD-test
 
 ## Build Setup
@@ -67,3 +68,7 @@ More information about the usage of this directory in [the documentation](https:
 This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
 
 More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
+=======
+# crud-vue
+A simple CRUD example with Vue.
+>>>>>>> 6eb56959faf21faa891653e698e399def64b06ca
