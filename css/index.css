@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;1,600;1,700&display=swap');
+
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.comment-form { 
+    width: 550px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.comment-form .title {
+    /* text-decoration: underline;
+    text-decoration-color: #357EC7; */
+    margin-bottom: 20px;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 75px;
+}
+
+.card {
+    margin: 20px;
+    width: 400px;
+}

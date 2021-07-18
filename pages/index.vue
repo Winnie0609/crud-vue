@@ -1,6 +1,9 @@
 <template>
   <div>
-    <form>
+    <form class="comment-form">
+      <h1 class="title">
+        Give us some advice to improve!
+      </h1>
       <v-text-field
         v-model="title"
         label="Title"
@@ -19,146 +22,106 @@
         submit
       </v-btn>
     </form>
+    <div class="cards">
+      <v-card
+        v-for="post in $store.state.posts"
+        :key="post.id"
+        class="mx-auto card"
+        max-width="400"
+      >
+        <v-card-title>{{ post.id }}</v-card-title>
+        <v-card-text v-if="post.show" class="text--primary">
+          <div>{{ post.title }}</div>
+          <div>{{ post.body }}</div>
+        </v-card-text>
 
-    <v-card
-      v-for="post in posts"
-      :key="post.title"
-      class="mx-auto"
-      max-width="400"
-    >
-      <v-card-title>Comment</v-card-title>
+        <v-card-text v-if="!post.show" class="text--primary">
+          <v-text-field
+            v-model="editedTitle"
+            label="Title"
+            required
+          />
 
-      <v-card-text v-if="post.show" class="text--primary">
-        <div>{{ post.title }}</div>
-        <div>{{ post.body }}</div>
-      </v-card-text>
+          <v-text-field
+            v-model="editedBody"
+            label="Message"
+            required
+          />
 
-      <v-card-text v-if="!post.show" class="text--primary">
-        <v-text-field
-          v-model="post.title"
-          label="Title"
-          required
-        />
+          <v-btn
+            color="orange"
+            text
+            @click="updatePost(post)"
+          >
+            Submit
+          </v-btn>
+        </v-card-text>
 
-        <v-text-field
-          v-model="post.body"
-          label="Message"
-          required
-        />
+        <v-card-actions>
+          <v-btn
+            color="orange"
+            text
+            @click="editBtn(post)"
+          >
+            Edit
+          </v-btn>
 
-        <v-btn
-          color="orange"
-          text
-          @click="updatePost(post)"
-        >
-          Submit
-        </v-btn>
-      </v-card-text>
-
-      <v-card-actions>
-        <v-btn
-          color="orange"
-          text
-          @click="editPost(post)"
-        >
-          Edit
-        </v-btn>
-
-        <v-btn
-          color="orange"
-          text
-          @click="deletePost(post)"
-        >
-          Delete
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+          <v-btn
+            color="orange"
+            text
+            @click="deletePost(post)"
+          >
+            Delete
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </div>
   </div>
 </template>
   </div>
 </template>
 
 <script>
+
 export default {
+  css: ['~/assets/index.css'],
+
   data () {
     return {
-      posts: [
-        { title: 'Luke', body: 'helllooooo', userId: 126 },
-        { title: 'Leia', body: 'fsgdafsa', userId: 345 },
-        { title: 'Rey', body: 'dfsdf', userId: 123 }
-      ],
       title: '',
       body: '',
-      show: true
+      editedTitle: '',
+      editedBody: ''
     }
   },
 
   async mounted () {
-    const res = await fetch('https://jsonplaceholder.typicode.com/posts')
-    const data = await res.json()
-    data.forEach((item) => { item.show = true })
-    // console.log(data)
-    this.posts = data
+    await this.$store.dispatch('initPost')
   },
 
   methods: {
-    createPost () {
-      fetch('https://jsonplaceholder.typicode.com/posts', {
-        method: 'POST',
-        body: JSON.stringify({
-          title: this.title,
-          body: this.body,
-          userId: 1
-        }),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8'
-        }
-      })
-        .then(response => response.json())
-        .then((post) => {
-          // console.log(post)
-          this.posts.unshift(post)
-          post.show = true
-          post.id = Math.floor(Math.random() * 10000)
-          // console.log(post)
-        })
-
+    async createPost () {
+      await this.$store.dispatch('createPost', { title: this.title, body: this.body })
       this.title = ''
       this.body = ''
     },
 
-    updatePost (post) {
-      fetch(`https://jsonplaceholder.typicode.com/posts/${post.id}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          id: post.id,
-          title: post.title,
-          body: post.body,
-          userId: 1
-        }),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8'
-        }
+    async updatePost (post, editedTitle, editedBody) {
+      await this.$store.dispatch('updatePost', {
+        post,
+        editedTitle: this.editedTitle,
+        editedBody: this.editedBody
       })
-        .then(response => response.json())
-        // .then(json => console.log(json))
+    },
 
-      post.show = true
+    editBtn (post) {
+      this.$store.dispatch('editBtn', post)
     },
 
     deletePost (post) {
-      fetch(`https://jsonplaceholder.typicode.com/posts/${post.id}`, {
-        method: 'DELETE'
-      })
-
-      const removeItem = this.posts.findIndex(item => item.id === post.id)
-      this.posts.splice(removeItem, 1)
-      // console.log(removeItem)
-    },
-
-    editPost (post) {
-      this.$set(post, 'show', !post.show)
+      this.$store.dispatch('deletePost', post)
     }
+
   }
 }
 </script>
