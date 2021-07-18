@@ -31,8 +31,12 @@
       >
         <v-card-title>{{ post.id }}</v-card-title>
         <v-card-text v-if="post.show" class="text--primary">
-          <div>{{ post.title }}</div>
-          <div>{{ post.body }}</div>
+          <div class="post-title">
+            {{ post.title }}
+          </div>
+          <div class="post-message">
+            {{ post.body }}
+          </div>
         </v-card-text>
 
         <v-card-text v-if="!post.show" class="text--primary">
@@ -55,9 +59,17 @@
           >
             Submit
           </v-btn>
+
+          <v-btn
+            color="orange"
+            text
+            @click="cancelBtn(post)"
+          >
+            Cancel
+          </v-btn>
         </v-card-text>
 
-        <v-card-actions>
+        <v-card-actions v-if="post.show">
           <v-btn
             color="orange"
             text
@@ -116,6 +128,12 @@ export default {
 
     editBtn (post) {
       this.$store.dispatch('editBtn', post)
+      this.editedTitle = post.title
+      this.editedBody = post.body
+    },
+
+    cancelBtn (post) {
+      this.$store.dispatch('cancelBtn', post)
     },
 
     deletePost (post) {

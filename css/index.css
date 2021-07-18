@@ -4,6 +4,10 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
+* {
+    color: #000000;
+}
+
 .comment-form { 
     width: 550px;
     margin: 50px auto;
@@ -18,11 +22,25 @@ body {
 
 .cards {
     display: flex;
+    justify-content: space-around;
     flex-wrap: wrap;
-    margin: 75px;
+    margin: 70px 120px;
 }
 
 .card {
-    margin: 20px;
+    margin: 30px 20px;
     width: 400px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.card:hover {
+    transform: scale(1.03);
+    transition: .2s;
+}
+
+.post-title {
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: 600;
 }

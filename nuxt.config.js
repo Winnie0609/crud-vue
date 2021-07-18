@@ -81,7 +81,7 @@ export default {
   },
 
   router: {
-    base: '/<repository_name>/'
+    base: '/crud-vue/'
   },
   ...routerBase
 }

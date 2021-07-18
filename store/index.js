@@ -9,8 +9,6 @@ export const mutations = {
 
   pushPost (state, post) {
     state.posts.unshift(post)
-    post.show = true
-    post.id = Math.floor(Math.random() * 10000)
   },
 
   setPost (state, { id, title, body }) {
@@ -59,15 +57,17 @@ export const actions = {
     })
 
     const post = await res.json()
+    post.show = true
+    post.id = Math.floor(Math.random() * 10000)
     // console.log(post)
     commit('pushPost', post)
   },
 
   async updatePost ({ commit }, { post, editedTitle, editedBody }) {
-    const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${post.id}`, {
+    const res = await fetch('https://jsonplaceholder.typicode.com/posts/1', {
       method: 'PUT',
       body: JSON.stringify({
-        id: post.id,
+        id: 1,
         title: post.title,
         body: post.body,
         userId: 1
@@ -88,10 +88,37 @@ export const actions = {
     })
   },
 
-  editBtn ({ commit }, post) {
+  editBtn ({ commit, state }, post) {
+    state.posts.forEach((item) => {
+      if (item.id !== post.id) {
+        commit('setShow', {
+          id: item.id,
+          show: true
+        })
+      }
+    })
+
     commit('setShow', {
       id: post.id,
       show: !post.show
+    })
+  },
+
+  cancelBtn ({ commit, state }, post) {
+    const postIndex = state.posts.findIndex(item => item.id === post.id)
+
+    state.posts.forEach((item) => {
+      if (item.id === postIndex) {
+        commit('setShow', {
+          id: item.id,
+          show: true
+        })
+      }
+    })
+
+    commit('setShow', {
+      id: post.id,
+      show: true
     })
   },
 
